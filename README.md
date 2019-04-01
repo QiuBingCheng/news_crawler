@@ -7,27 +7,27 @@
 
 ### 1.請使用者輸入關鍵字及頁數
 
-![1](Crawler\image\1.jpg)
+![1](<https://github.com/vbjc5275/news_crawler/raw/master/Crawler/image/1.jpg>)
 
 ### 2.檢視路徑底下的word檔
 
-![2](Crawler\image\2.jpg)
+![2](https://github.com/vbjc5275/news_crawler/raw/master/Crawler/image/2.jpg)
 
 ### 3.檢視文字雲
 
-![聚陽實業 NEWS](Crawler\image\聚陽實業 NEWS.png)
+![聚陽實業 NEWS](https://github.com/vbjc5275/news_crawler/raw/master/Crawler/image/%E8%81%9A%E9%99%BD%E5%AF%A6%E6%A5%AD%20NEWS.png)
 
 ## 範例2 - 影像辨識
 
 ### 1.請使用者輸入關鍵字及頁數
 
-![2-1](Crawler\image\2-1.jpg)
+![2-1](https://github.com/vbjc5275/news_crawler/raw/master/Crawler/image/2-1.jpg)
 
 ###  2.檢視路徑底下的word檔
 
-![2-2](Crawler\image\2-2.jpg)
+![2-2](https://github.com/vbjc5275/news_crawler/raw/master/Crawler/image/2-2.jpg)
 
 ### 3.檢視文字雲
 
-![影像辨識 NEWS](Crawler\image\影像辨識 NEWS.png)
+![影像辨識 NEWS](https://github.com/vbjc5275/news_crawler/raw/master/Crawler/image/%E5%BD%B1%E5%83%8F%E8%BE%A8%E8%AD%98%20NEWS.png)
 
