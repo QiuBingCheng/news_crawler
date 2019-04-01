@@ -7,11 +7,7 @@
 
 ### 1.請使用者輸入關鍵字及頁數
 
-<<<<<<< HEAD
 ![1](<https://github.com/vbjc5275/news_crawler/raw/master/Crawler/image/1.jpg>)
-=======
-![1] (https://github.com/vbjc5275/news_crawler/blob/master/Crawler/image/1.jpg)
->>>>>>> 0eed70839763906490b6fe2b2546b62ee11bdc61
 
 ### 2.檢視路徑底下的word檔
 
