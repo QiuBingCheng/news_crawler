@@ -7,7 +7,7 @@
 
 ### 1.請使用者輸入關鍵字及頁數
 
-![1](Crawler\image\1.jpg)
+https://github.com/vbjc5275/news_crawler/blob/master/Crawler/image/1.jpg
 
 ### 2.檢視路徑底下的word檔
 
