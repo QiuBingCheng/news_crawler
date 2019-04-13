@@ -22,7 +22,7 @@
 
 程式最後一步，會自動生成文字雲，文字大小會依照內文的字詞頻率高低變化，並將圖片儲存在資料夾內。
 
-![光寶 NEWS](<https://github.com/vbjc5275/news_crawler/raw/master/Crawler/image/光寶 NEWS.png)
+![光寶 NEWS](<https://github.com/vbjc5275/news_crawler/raw/master/Crawler/image/%E5%85%89%E5%AF%B6%20NEWS.png)
 
 ## 範例2 - 影像辨識
 
@@ -41,10 +41,7 @@
 ## 未來展望
 
 本作品未來希望可以達到為word檔新聞標題自動添加網址連結的功能。
-
-<br>
-
-具備技能：
+待具備技能：
 
 **巨集程式**
 
