@@ -15,7 +15,7 @@
 
 ### 3.檢視文字雲
 
-![聚陽實業 NEWS](https://github.com/vbjc5275/news_crawler/raw/master/Crawler/image/%E8%81%9A%E9%99%BD%E5%AF%A6%E6%A5%AD%20NEWS.png)
+![光寶 NEWS](<https://github.com/vbjc5275/news_crawler/raw/master/Crawler/image/光寶 NEWS.png)
 
 ## 範例2 - 影像辨識
 
