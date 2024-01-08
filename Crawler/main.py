@@ -81,6 +81,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 newItem = QTableWidgetItem(str(cell))
                 self.tableWidget.setItem(i, j, newItem)
 
+        self.imglabel_size = (self.imglabel.width(), self.imglabel.height())
+
     def set_up_history_table_ui(self):
 
         # set up table UI
@@ -112,7 +114,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def set_up_history_fun(self):
         # init image
         self.img_folder = config["result"]["image"]
-        self.imglabel_size = (self.imglabel.width(), self.imglabel.height())
 
         # set
         count = db_func.total_count()
@@ -138,7 +139,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         fig_path = f"{self.img_folder}\\{filename}.png"
 
         if os.path.isfile(fig_path):
-
+            print(*self.imglabel_size)
             img = QtGui.QPixmap(fig_path).scaled(*self.imglabel_size)
             # img = QtGui.QPixmap(fig_path)
             self.imglabel.setPixmap(img)

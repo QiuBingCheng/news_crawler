@@ -201,7 +201,7 @@ class Ui_MainWindow(object):
         self.tableWidget.setRowCount(0)
         self.horizontalLayout_2.addWidget(self.tableWidget)
         self.imglabel = QtWidgets.QLabel(self.verticalLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.imglabel.sizePolicy().hasHeightForWidth())
