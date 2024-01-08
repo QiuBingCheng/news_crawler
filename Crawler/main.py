@@ -38,13 +38,18 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         # trigger binding
         self.tabWidget.currentChanged.connect(self.refresh_records)
 
-    def refresh_records(self):
-        pass
+    def refresh_records(self, index):
+        if index == 0:
+            return
+
+        self.set_up_history_table_content()
 
     def set_up_crawl_fun(self):
         self.cursor = self.textBrowser_msg.textCursor()
         self.textBrowser_msg.textChanged.connect(self.moveCursor)
         self.button_start.clicked.connect(self.crawl)
+
+        # set workthread
         self.thread = WorkThread()
         self.thread.update_msg_signal.connect(self.msgUpdate)
         self.thread.finished_singnal.connect(self.finished)
@@ -132,7 +137,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         filename = db_func.select_filename(crawl_date)
         fig_path = f"{self.img_folder}\\{filename}.png"
 
-        # 判斷照片是否存在
         if os.path.isfile(fig_path):
 
             img = QtGui.QPixmap(fig_path).scaled(*self.imglabel_size)
@@ -186,25 +190,28 @@ class WorkThread(QThread):
             f"============== 共爬取 {len(news_infos)} 筆紀錄=============")
 
         now = datetime.datetime.now()
-
         filename = f"{now.strftime('%Y%m%d_%H%M%S')}_{keyword}"
-        conn = sqlite3.connect(config['result']['db'])
-        c = conn.cursor()
-        c.execute("INSERT INTO news_record VALUES (?, ?, ?,?)",
-                  (now.strftime("%Y-%m-%d %H:%M:%S"),
-                   keyword, len(news_infos), filename))
-        conn.commit()
-        self.update_msg_signal.emit("=========== 爬取結果成功儲存在資料庫！============")
-        self.finished_singnal.emit()
 
-        process_to_image(news_infos, filename)
-        self.update_msg_signal.emit(
-            f"============== 成功儲存文字雲 {filename}.png ...=============")
+        try:
+            process_to_image(news_infos, filename)
+            self.update_msg_signal.emit(
+                f"============== 成功儲存文字雲 {filename}.png ...=============")
+
+            db_func.insert_one_record(now.strftime("%Y-%m-%d %H:%M:%S"),
+                                      keyword, len(news_infos), filename)
+            self.update_msg_signal.emit(
+                "=========== 爬取結果成功儲存在資料庫！============")
+
+        except Exception as e:
+            print(news_infos)
+            self.update_msg_signal.emit(str(e))
+
+        finally:
+            self.finished_singnal.emit()
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    # setup stylesheet
     app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
     myWin = MyMainWindow()
     myWin.show()

@@ -11,6 +11,7 @@ import time
 import random
 import urllib.parse
 import os
+from fake_useragent import UserAgent
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -29,8 +30,19 @@ class Crawler():
         # self.__output_area = output_area
         self.send_msg = send_msg
 
+        # Create a UserAgent object
+        self.user_agent = UserAgent()
+
+    def custom_header(self):
+        headers = {
+            'User-Agent': self.user_agent.random,  # User-Agent header
+            'Accept-Language': 'en-US',  # Accept-Language header
+        }
+        return headers
+
     def get_soup(self, url):
-        list_req = requests.get(url)
+        print("get_soup: ", url)
+        list_req = requests.get(url, headers=self.custom_header())
         if list_req.status_code == requests.codes.ok:
             # 以 BeautifulSoup 解析 HTML 程式碼
             soup = BeautifulSoup(list_req.text, 'html.parser')
@@ -39,7 +51,7 @@ class Crawler():
 
     def get_news_content(self, soup, source):
         ps_tag = soup.find_all('p')
-        if ps_tag is None:
+        if len(ps_tag) == 0:
             return None
 
         content = " ".join([p.text for p in ps_tag])

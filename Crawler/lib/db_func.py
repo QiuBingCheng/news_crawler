@@ -20,6 +20,16 @@ def select_records(limit=10, offset=2):
     return data
 
 
+def insert_one_record(time, keyword, num_records, filename):
+    conn = sqlite3.connect(config["result"]["db"])
+    c = conn.cursor()
+    c.execute("INSERT INTO news_record VALUES (?, ?, ?,?)",
+              (time, keyword, num_records, filename))
+    conn.commit()
+    conn.close()
+    return True
+
+
 def select_filename(crawl_date):
     c = conn.cursor()
     result = c.execute(
