@@ -139,9 +139,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         fig_path = f"{self.img_folder}\\{filename}.png"
 
         if os.path.isfile(fig_path):
-            print(*self.imglabel_size)
             img = QtGui.QPixmap(fig_path).scaled(*self.imglabel_size)
-            # img = QtGui.QPixmap(fig_path)
             self.imglabel.setPixmap(img)
 
     def to_next_page(self):

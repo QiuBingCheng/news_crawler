@@ -4,6 +4,8 @@ Created on Tue Apr 16 14:46:44 2019
 
 @author: User
 """
+from selenium.webdriver.chrome.options import Options
+from selenium import webdriver
 import configparser
 import requests
 from bs4 import BeautifulSoup
@@ -14,7 +16,6 @@ import os
 from fake_useragent import UserAgent
 import warnings
 warnings.filterwarnings('ignore')
-
 ###############################################################################
 #                     請使用者輸入關鍵字，並爬下的相關新聞 (Title,Source,Content)                           #
 ###############################################################################
@@ -36,18 +37,22 @@ class Crawler():
     def custom_header(self):
         headers = {
             'User-Agent': self.user_agent.random,  # User-Agent header
-            'Accept-Language': 'en-US',  # Accept-Language header
+            'Accept-Language': 'zh-TW,zh;q=0.6',  # Accept-Language header
         }
         return headers
 
     def get_soup(self, url):
         print("get_soup: ", url)
-        list_req = requests.get(url, headers=self.custom_header())
-        if list_req.status_code == requests.codes.ok:
-            # 以 BeautifulSoup 解析 HTML 程式碼
-            soup = BeautifulSoup(list_req.text, 'html.parser')
-            return soup
-        return None
+        options = Options()
+        options.add_argument("--headless")
+        options.add_argument('--ignore-certificate-errors')
+        cService = webdriver.ChromeService(
+            executable_path=config['crawler']['driver_exe'])
+        browser = webdriver.Chrome(service=cService, options=options)
+        browser.get(url)
+        time.sleep(5)
+        soup = BeautifulSoup(browser.page_source)
+        return soup
 
     def get_news_content(self, soup, source):
         ps_tag = soup.find_all('p')
