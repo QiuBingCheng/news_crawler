@@ -7,6 +7,7 @@ Created on Tue Dec 11 09:43:24 2018
 
 # from sklearn.feature_extraction.text import CountVectorizer
 from nltk.tokenize import word_tokenize
+from collections import namedtuple
 import jieba
 import configparser
 from wordcloud import WordCloud
@@ -44,32 +45,37 @@ def filter_sentecnce(content: str):
 # %%
 
 
-def process_to_image(news_info: dict, filename: str):
-    content_text = " ".join([news["content"] for news in news_info])
-    cut_text = filter_sentecnce(content_text)  # 文本切詞結果
-    wordcloud = WordCloud(collocations=False,
-                          # 字體設定(是中文一定要設定，否則會是亂碼)
-                          font_path=config["word_cloud"]["font_path"],
-                          width=800,  # 圖片寬度
-                          height=600,  # 圖片高度
-                          background_color='white',  # 圖片底色
-                          margin=2  # 文字之間的間距
-                          ).generate(cut_text)  # 要放入的文字)
+class Storer():
 
-    image = wordcloud.to_image()
-    image.save(f"{config['result']['image']}\\{filename}.png")
+    img_path = config['result']['image']
+    doc_path = config['result']['doc']
 
+    @classmethod
+    def process_to_image(cls, news_info: namedtuple, filename: str):
+        content_text = " ".join([news.content for news in news_info])
+        cut_text = filter_sentecnce(content_text)  # 文本切詞結果
+        wordcloud = WordCloud(collocations=False,
+                              # 字體設定(是中文一定要設定，否則會是亂碼)
+                              font_path=config["word_cloud"]["font_path"],
+                              width=800,  # 圖片寬度
+                              height=600,  # 圖片高度
+                              background_color='white',  # 圖片底色
+                              margin=2  # 文字之間的間距
+                              ).generate(cut_text)  # 要放入的文字)
 
-def process_to_word(news_info: dict, title: str, filename: str):
+        image = wordcloud.to_image()
+        image.save(f"{cls.img_path}\\{filename}.png")
 
-    document = Document()
-    document.add_heading(title)
-    p = document.add_paragraph('這是一篇由爬蟲抓取GOOGLE新聞，並以python自動寫入的WORD檔')
-    p.add_run().bold = True
+    @classmethod
+    def process_to_word(cls, news_info: namedtuple, title: str, filename: str):
+        document = Document()
+        document.add_heading(title)
+        p = document.add_paragraph('這是一篇由爬蟲抓取GOOGLE新聞，並以python自動寫入的WORD檔')
+        p.add_run().bold = True
 
-    for news in news_info:
-        document.add_heading(news["title"], 3)
-        document.add_paragraph(news["souce"])
-        document.add_paragraph(news["content"])
+        for news in news_info:
+            document.add_heading(news.title, 3)
+            document.add_paragraph(news.source)
+            document.add_paragraph(news.content)
 
-    document.save(f"{config['storage']['doc']}\\{filename}.docx")
+        document.save(f"{cls.doc_path}\\{filename}.docx")

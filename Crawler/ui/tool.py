@@ -23,12 +23,9 @@ def runMain():
     list = listUiFile()
     for uifile in list:
         pyfile = transPyFile(uifile)
-        cmd = 'pyuic5 -o {pyfile} {uifile}'.format(
-            pyfile=pyfile, uifile=uifile)
-        # print(cmd)
+        cmd = f'pyuic5 -o {pyfile} {uifile}'
         os.system(cmd)
 
 
-# 程序的主入口
 if __name__ == "__main__":
     runMain()

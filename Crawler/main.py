@@ -4,17 +4,15 @@ import configparser
 import sys
 import qdarkstyle
 from PyQt5.QtWidgets import QMainWindow, QMessageBox, QApplication, QAbstractItemView, QTableWidgetItem, QHeaderView
-from PyQt5 import QtCore, QtGui
+from PyQt5 import QtGui
 from PyQt5.QtCore import QThread, pyqtSignal
 from ui.crawl import Ui_MainWindow
 from lib.crawler import Crawler
-from lib.word_func import process_to_image, process_to_word
+from lib.word_func import Storer
 from lib import db_func
 import datetime
-import sqlite3
 import os
 import math
-
 config = configparser.ConfigParser()
 config.read('config.ini')
 
@@ -50,7 +48,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.button_start.clicked.connect(self.crawl)
 
         # set workthread
-        self.thread = WorkThread()
+        self.thread = CrawlerThread()
         self.thread.update_msg_signal.connect(self.msgUpdate)
         self.thread.finished_singnal.connect(self.finished)
 
@@ -62,6 +60,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             QMessageBox.information(self, '注意', "關鍵字不可空白！", QMessageBox.Yes)
 
         self.button_start.setEnabled(False)
+        self.textBrowser_msg.clear()
         self.thread.start()
 
     def moveCursor(self):
@@ -173,36 +172,36 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             self.pushButton_next.setEnabled(False)
 
 
-class WorkThread(QThread):
+class CrawlerThread(QThread):
     update_msg_signal = pyqtSignal(str)
     finished_singnal = pyqtSignal()
 
     def run(self):
         keyword = myWin.lineEdit_keyword.text()
         nums = int(myWin.spinBox_pages.value())
-        self.update_msg_signal.emit("=============== 建立Crawl物件 ==============")
+        self.update_msg_signal.emit("建立Crawl物件...")
 
-        crawler = Crawler(keyword, nums, self.update_msg_signal.emit)
-        self.update_msg_signal.emit("=============== 爬蟲開始 ===================")
-        news_infos = crawler.crawl()
+        crawler = Crawler(self.update_msg_signal.emit)
+        self.update_msg_signal.emit("爬蟲開始...")
+        news_infos = crawler.start(keyword, nums)
         self.update_msg_signal.emit(
-            f"============== 共爬取 {len(news_infos)} 筆紀錄=============")
+            f"共爬取 {len(news_infos)} 筆紀錄")
 
         now = datetime.datetime.now()
         filename = f"{now.strftime('%Y%m%d_%H%M%S')}_{keyword}"
 
         try:
-            process_to_image(news_infos, filename)
+            Storer.process_to_image(news_infos, filename)
             self.update_msg_signal.emit(
-                f"============== 成功儲存文字雲 {filename}.png ...=============")
-
+                f"成功儲存文字雲 {filename}.png !")
+            Storer.process_to_word(news_infos, keyword, filename)
+            self.update_msg_signal.emit(
+                f"成功儲存文字檔 {filename}.doc !")
             db_func.insert_one_record(now.strftime("%Y-%m-%d %H:%M:%S"),
                                       keyword, len(news_infos), filename)
-            self.update_msg_signal.emit(
-                "=========== 爬取結果成功儲存在資料庫！============")
+            self.update_msg_signal.emit("爬取結果成功儲存在資料庫！")
 
         except Exception as e:
-            print(news_infos)
             self.update_msg_signal.emit(str(e))
 
         finally:
